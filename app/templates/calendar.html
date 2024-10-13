@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Scheduling Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='calendar.css') }}">
+    <script src="{{ url_for('static', filename='calendarscript.js') }}"></script>
+</head>
+<body>
+    <header>
+        <div class="wrapper">
+            <div class="c-monthyear">
+                <div class="c-month">
+                    <span id="prev" class="prev fa fa-angle-left" aria-hidden="true"></span>
+                    <div id="c-paginator">
+                        {% for m in range(1, 13) %}
+                            <span class="c-paginator__month">{{ month_text[m-1] }}</span>
+                        {% endfor %}
+                    </div>
+                    <span id="next" class="next fa fa-angle-right" aria-hidden="true"></span>
+                </div>
+                <span class="c-paginator__year">{{ year }}</span>
+            </div>
+        </div>
+    </header>
+    <div class="wrapper">
+        <div class="c-calendar">
+            <div class="c-cal__container c-calendar__style">
+                <div class="c-main c-main-{{ month }}">
+                    <div class="c-cal__row">
+                        <div class='c-cal__col'>Sun</div>
+                        <div class='c-cal__col'>Mon</div>
+                        <div class='c-cal__col'>Tue</div>
+                        <div class='c-cal__col'>Wed</div>
+                        <div class='c-cal__col'>Thu</div>
+                        <div class='c-cal__col'>Fri</div>
+                        <div class='c-cal__col'>Sat</div>
+                    </div>
+
+                    <!-- Pad cells before the first day of the month -->
+                    <div class="c-cal__row">
+                        {% for i in range(start_day) %}
+                            <div class='c-cal__cel'></div>
+                        {% endfor %}
+
+                        {% for day in range(1, month_length + 1) %}
+                            <div data-day="{{ year }}-{{ month:02 }}-{{ day:02 }}" class='c-cal__cel'>
+                                <p>{{ day }}</p>
+                            </div>
+
+                            {% if (day + start_day) % 7 == 0 %}
+                                </div><div class="c-cal__row">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Event Creator -->
+        <div class="c-event__creator c-calendar__style js-event__creator">
+            <a href="javascript:;" class="o-btn js-event__close">CLOSE<span class="fa fa-close"></span></a>
+            <form id="addEvent">
+                <input placeholder="Event name" type="text" name="name">
+                <input type="date" name="date">
+                <textarea placeholder="Notes" name="notes" cols="30" rows="10"></textarea>
+                <select name="tags">
+                    <option value="chore">Chore</option>
+                    <option value="event">Event</option>
+                    <option value="important">Important</option>
+                    <option value="birthday">Other</option>
+                </select>
+            </form>
+            <br>
+            <a href="javascript:;" class="o-btn js-event__save">SAVE<span class="fa fa-save"></span></a>
+        </div>
+    </div>
+
+    <script>
+        var monthText = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        // You may need to add more JavaScript for event handling
+    </script>
+</body>
+</html>
